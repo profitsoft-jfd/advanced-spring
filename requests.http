@@ -1,0 +1,8 @@
+POST http://localhost:9090/api/payments/generate?count=3
+
+
+###
+POST http://localhost:9090/api/payments/process
+
+###
+GET http://localhost:9090/api/contracts/9eb935ef-5ec9-4510-aee2-d348771afff3
