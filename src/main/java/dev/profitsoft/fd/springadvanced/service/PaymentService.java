@@ -21,6 +21,9 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Service for payment processing operations.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,6 +37,12 @@ public class PaymentService {
 
   private final PaymentRepository paymentRepository;
 
+  /**
+   * Creates a new payment.
+   *
+   * @param paymentSaveDto payment data
+   * @return created payment ID
+   */
   @Transactional
   public String create(PaymentSaveDto paymentSaveDto) {
     PaymentData data = convertToData(paymentSaveDto);
@@ -41,6 +50,9 @@ public class PaymentService {
     return saved.getId();
   }
 
+  /**
+   * Processes all new payments in batches, assigning them to contracts.
+   */
   @Monitored
   public void processPayments() {
     log.info("Start processing payments");
@@ -56,6 +68,12 @@ public class PaymentService {
         result.getTotallyProcessed(), result.getAssigned(), result.getNotAssigned());
   }
 
+  /**
+   * Processes a batch of payments by IDs.
+   *
+   * @param paymentIds list of payment IDs
+   * @return processing result
+   */
   private PaymentsProcessingResult processPaymentsByIds(List<String> paymentIds) {
     PaymentsProcessingResult result = new PaymentsProcessingResult();
     List<PaymentData> payments = paymentRepository.findAllById(paymentIds);
@@ -66,6 +84,12 @@ public class PaymentService {
     return result;
   }
 
+  /**
+   * Processes a single payment, extracting contract number and assigning to contract.
+   *
+   * @param payment payment data
+   * @return processing result
+   */
   private PaymentsProcessingResult processPayment(PaymentData payment) {
     Optional<String> contractNumberOpt = extractNumberFromDescription(payment.getDescription());
     if (contractNumberOpt.isPresent()) {
@@ -87,6 +111,12 @@ public class PaymentService {
     return PaymentsProcessingResult.byStatus(payment.getStatus());
   }
 
+  /**
+   * Extracts contract number from payment description using regex.
+   *
+   * @param description payment description
+   * @return optional contract number
+   */
   private Optional<String> extractNumberFromDescription(String description) {
     if (description == null) {
       return Optional.empty();
@@ -98,6 +128,12 @@ public class PaymentService {
     return Optional.empty();
   }
 
+  /**
+   * Converts DTO to payment data entity.
+   *
+   * @param paymentSaveDto payment save DTO
+   * @return payment data entity
+   */
   private PaymentData convertToData(PaymentSaveDto paymentSaveDto) {
     PaymentData result = new PaymentData();
     result.setId(UUID.randomUUID().toString());
@@ -110,6 +146,12 @@ public class PaymentService {
     return result;
   }
 
+  /**
+   * Converts payment data to DTO.
+   *
+   * @param data payment data
+   * @return payment DTO
+   */
   public static PaymentDto convertToDto(PaymentData data) {
     return PaymentDto.builder()
         .id(data.getId())

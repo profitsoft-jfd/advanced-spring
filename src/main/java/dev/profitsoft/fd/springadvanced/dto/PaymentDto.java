@@ -6,13 +6,22 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.time.Instant;
 
+/**
+ * DTO for payment data.
+ */
 @Getter
 @Builder
 @Jacksonized
 public class PaymentDto {
 
+  /**
+   * Payment ID.
+   */
   private String id;
 
+  /**
+   * Payment sum.
+   */
   private Double sum;
 
   /**

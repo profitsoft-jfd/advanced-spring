@@ -6,6 +6,9 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * Scheduled task for automatic payment processing.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -14,6 +17,7 @@ public class PaymentScheduler {
   private final PaymentService paymentService;
 
   /**
+   * Scheduled payment processing with distributed lock.
    * Runs at second :00 every 5 minutes starting at minute :00 every hour.
    */
   @Scheduled(cron = "${payment.processing.cron:0 0/5 * * * ?}")

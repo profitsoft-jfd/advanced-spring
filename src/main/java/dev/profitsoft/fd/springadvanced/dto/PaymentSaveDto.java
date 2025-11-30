@@ -6,6 +6,9 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.time.Instant;
 
+/**
+ * DTO for creating a new payment.
+ */
 @Getter
 @Builder
 @Jacksonized

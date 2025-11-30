@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for contract operations.
+ */
 @RestController
 @RequestMapping("/api/contracts")
 @RequiredArgsConstructor
@@ -15,6 +18,12 @@ public class ContractController {
 
   private final ContractService contractService;
 
+  /**
+   * Retrieves contract details by ID.
+   *
+   * @param id contract ID
+   * @return contract details with payments
+   */
   @GetMapping("/{id}")
   public ContractDetailsDto getContractDetails(@PathVariable("id") String id) {
     return contractService.getContractDetails(id);

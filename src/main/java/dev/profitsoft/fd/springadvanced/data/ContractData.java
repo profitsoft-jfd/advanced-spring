@@ -22,6 +22,9 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class ContractData {
 
+  /**
+   * Contract ID.
+   */
   @Id
   @EqualsAndHashCode.Include
   private String id;
@@ -32,11 +35,20 @@ public class ContractData {
    */
   private String number;
 
+  /**
+   * Contract sign date.
+   */
   private LocalDate signDate;
 
+  /**
+   * Payments associated with this contract.
+   */
   @OneToMany(mappedBy = "contract")
   private Set<PaymentData> payments;
 
+  /**
+   * Timestamp when contract was saved.
+   */
   private Instant savedAt;
 
 }

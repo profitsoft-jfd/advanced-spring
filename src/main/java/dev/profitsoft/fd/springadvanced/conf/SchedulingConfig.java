@@ -10,6 +10,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
 
+/**
+ * Configuration for scheduled tasks with distributed locking using ShedLock.
+ */
 @Configuration
 @EnableScheduling
 @ConditionalOnProperty(
@@ -20,6 +23,12 @@ import javax.sql.DataSource;
 @EnableSchedulerLock(defaultLockAtMostFor = "PT1M")
 public class SchedulingConfig {
 
+  /**
+   * Creates JDBC-based lock provider for distributed task coordination.
+   *
+   * @param dataSource data source
+   * @return lock provider
+   */
   @Bean
   public LockProvider lockProvider(DataSource dataSource) {
     return new JdbcTemplateLockProvider(dataSource);

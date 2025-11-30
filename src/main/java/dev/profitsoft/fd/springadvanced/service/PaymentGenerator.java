@@ -11,6 +11,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Random;
 
+/**
+ * Utility for generating test contracts and payments.
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -20,6 +23,12 @@ public class PaymentGenerator {
 
   private final ContractService contractService;
 
+  /**
+   * Generates test contracts and payments.
+   * Skips every 10th contract to simulate different payment statuses.
+   *
+   * @param count number of records to generate
+   */
   public void generateContractsAndPayments(int count) {
     log.info("Start Generating contracts and payments");
     Random rnd = new Random();
@@ -48,6 +57,13 @@ public class PaymentGenerator {
     log.info("Finished generating contracts and payments. Totally generated {} records", generated);
   }
 
+  /**
+   * Builds a random payment DTO.
+   *
+   * @param contractNumber contract number to reference
+   * @param rnd random generator
+   * @return payment save DTO
+   */
   private static PaymentSaveDto buildPayment(String contractNumber, Random rnd) {
     return PaymentSaveDto.builder()
         .sum((double) rnd.nextInt(10000))
@@ -57,6 +73,12 @@ public class PaymentGenerator {
         .build();
   }
 
+  /**
+   * Builds a contract DTO.
+   *
+   * @param contractNumber contract number
+   * @return contract save DTO
+   */
   private static ContractSaveDto buildContract(String contractNumber) {
     return ContractSaveDto.builder()
         .number(contractNumber)

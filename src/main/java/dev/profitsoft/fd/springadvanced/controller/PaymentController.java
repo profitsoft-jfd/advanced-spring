@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST controller for payment operations.
+ */
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
@@ -18,11 +21,19 @@ public class PaymentController {
 
   private final PaymentService paymentService;
 
+  /**
+   * Generates test contracts and payments.
+   *
+   * @param count number of contracts to generate
+   */
   @PostMapping("/generate")
   public void generate(@RequestParam int count) {
     paymentGenerator.generateContractsAndPayments(count);
   }
 
+  /**
+   * Triggers manual payment processing.
+   */
   @PostMapping("/process")
   public void process() {
     paymentService.processPayments();

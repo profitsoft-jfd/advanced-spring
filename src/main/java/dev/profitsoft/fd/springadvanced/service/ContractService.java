@@ -17,6 +17,9 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Service for contract management operations.
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,23 +29,39 @@ public class ContractService {
 
   private final ContractRepository contractRepository;
 
-  private final CacheManager cacheManager;
-
+  /**
+   * Finds contract by number with caching.
+   *
+   * @param number contract number
+   * @return optional contract data
+   */
   @Monitored
   @Cacheable(value = CACHE_CONTRACT, key = "#number")
   public Optional<ContractData> findContractByNumber(String number) {
-    cacheManager.getCache(CACHE_CONTRACT).get(number, ContractData.class);
     Optional<ContractData> result = contractRepository.findByNumber(number);
     log.debug("Searched for Contract by number: {}, found: {}", number, result.isPresent());
     return result;
   }
 
+  /**
+   * Retrieves contract details including payments.
+   *
+   * @param id contract ID
+   * @return contract details
+   * @throws IllegalArgumentException if contract not found
+   */
   public ContractDetailsDto getContractDetails(String id) {
     ContractData data = contractRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("Contract with id '%s' not found".formatted(id)));
     return convertToDetailsDto(data);
   }
 
+  /**
+   * Converts contract data to details DTO.
+   *
+   * @param data contract data
+   * @return contract details DTO
+   */
   private static ContractDetailsDto convertToDetailsDto(ContractData data) {
     return ContractDetailsDto.builder()
         .id(data.getId())
@@ -54,6 +73,12 @@ public class ContractService {
         .build();
   }
 
+  /**
+   * Creates a new contract and evicts cache.
+   *
+   * @param contractSaveDto contract data
+   * @return created contract ID
+   */
   @CacheEvict(CACHE_CONTRACT)
   public String create(ContractSaveDto contractSaveDto) {
     ContractData data = convertToData(contractSaveDto);
@@ -61,6 +86,12 @@ public class ContractService {
     return saved.getId();
   }
 
+  /**
+   * Converts DTO to contract data entity.
+   *
+   * @param contractSaveDto contract save DTO
+   * @return contract data entity
+   */
   private static ContractData convertToData(ContractSaveDto contractSaveDto) {
     ContractData result = new ContractData();
     result.setId(UUID.randomUUID().toString());

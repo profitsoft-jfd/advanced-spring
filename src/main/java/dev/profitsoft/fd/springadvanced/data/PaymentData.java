@@ -25,6 +25,9 @@ import java.time.Instant;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PaymentData {
 
+  /**
+   * Payment ID.
+   */
   @Id
   @EqualsAndHashCode.Include
   private String id;
@@ -49,6 +52,9 @@ public class PaymentData {
    */
   private String description;
 
+  /**
+   * Payment processing status.
+   */
   @Enumerated(EnumType.STRING)
   private PaymentStatus status;
 
@@ -65,6 +71,9 @@ public class PaymentData {
   @JoinColumn(name = "id_contract")
   private ContractData contract;
 
+  /**
+   * Timestamp when payment was saved.
+   */
   private Instant savedAt;
 
 }
