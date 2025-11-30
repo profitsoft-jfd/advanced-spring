@@ -1,5 +1,6 @@
 package dev.profitsoft.fd.springadvanced.controller;
 
+import dev.profitsoft.fd.springadvanced.exception.DuplicateRecordException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -27,6 +28,23 @@ public class GlobalExceptionHandler {
         ex.getMessage()
     );
     problemDetail.setTitle("Resource Not Found");
+    return problemDetail;
+  }
+
+  /**
+   * Handles DuplicateRecordException and returns 409 Conflict.
+   *
+   * @param ex the exception
+   * @return problem detail with error information
+   */
+  @ExceptionHandler(DuplicateRecordException.class)
+  public ProblemDetail handleDuplicateRecordException(DuplicateRecordException ex) {
+    log.warn("Duplicate record: {}", ex.getMessage());
+    ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(
+        HttpStatus.CONFLICT,
+        ex.getMessage()
+    );
+    problemDetail.setTitle("Duplicate Record");
     return problemDetail;
   }
 

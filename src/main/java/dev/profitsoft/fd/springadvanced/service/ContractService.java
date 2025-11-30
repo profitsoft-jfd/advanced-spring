@@ -3,13 +3,18 @@ package dev.profitsoft.fd.springadvanced.service;
 import dev.profitsoft.fd.springadvanced.data.ContractData;
 import dev.profitsoft.fd.springadvanced.dto.ContractDetailsDto;
 import dev.profitsoft.fd.springadvanced.dto.ContractSaveDto;
+import dev.profitsoft.fd.springadvanced.exception.DuplicateRecordException;
 import dev.profitsoft.fd.springadvanced.monitor.Monitored;
 import dev.profitsoft.fd.springadvanced.repository.ContractRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -30,6 +35,9 @@ public class ContractService {
   public static final String CACHE_CONTRACT = "CONTRACT";
 
   private final ContractRepository contractRepository;
+
+  @PersistenceContext
+  private EntityManager entityManager;
 
   /**
    * Finds contract by number with caching.
@@ -82,13 +90,24 @@ public class ContractService {
    *
    * @param contractSaveDto contract data
    * @return created contract ID
+   * @throws DuplicateRecordException if contract number already exists
    */
   @Transactional
   @CacheEvict(value = CACHE_CONTRACT, allEntries = true)
   public String create(ContractSaveDto contractSaveDto) {
     ContractData data = convertToData(contractSaveDto);
-    ContractData saved = contractRepository.save(data);
-    return saved.getId();
+    try {
+      ContractData saved = contractRepository.save(data);
+      entityManager.flush();
+      return saved.getId();
+    } catch (PersistenceException | DataIntegrityViolationException ex) {
+      String message = ex.getMessage();
+      if (message != null && message.toLowerCase().contains("contract_number_unique")) {
+        throw new DuplicateRecordException(
+            "Contract with number '%s' already exists".formatted(contractSaveDto.getNumber()), ex);
+      }
+      throw ex;
+    }
   }
 
   /**

@@ -4,5 +4,5 @@
 .-'  `) '-' '|  |   |  ||  ||  |' '-' '      \ '-'  |\ `-' |  \    / \ '-'  ||  ||  \ `--.\   --.\ `-' |
 `----'|  |-' `--'   `--'`--''--'.`-  /        `--`--' `---'    `--'   `--`--'`--''--'`---' `----' `---'
       `--'                      `---'
-${application.title} ${application.version}
+Build: ${BUILD:unknown} Hash: ${HASH:unknown}
 Powered by Spring Boot ${spring-boot.version}

@@ -188,4 +188,31 @@ class ContractControllerTest {
         .andExpect(jsonPath("$.payments", hasSize(0)));
   }
 
+  @Test
+  void createContract_withDuplicateNumber_shouldReturnConflict() throws Exception {
+    // Create first contract
+    ContractSaveDto firstContract = ContractSaveDto.builder()
+        .number("TEST-DUPLICATE")
+        .signDate(LocalDate.of(2025, 11, 30))
+        .build();
+
+    mockMvc.perform(post("/api/contracts")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(firstContract)))
+        .andExpect(status().isCreated());
+
+    // Try to create second contract with same number
+    ContractSaveDto duplicateContract = ContractSaveDto.builder()
+        .number("TEST-DUPLICATE")
+        .signDate(LocalDate.of(2025, 12, 1))
+        .build();
+
+    mockMvc.perform(post("/api/contracts")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(duplicateContract)))
+        .andExpect(status().isConflict())
+        .andExpect(jsonPath("$.title").value("Duplicate Record"))
+        .andExpect(jsonPath("$.detail").value("Contract with number 'TEST-DUPLICATE' already exists"));
+  }
+
 }
