@@ -45,6 +45,8 @@ The application will start on `http://localhost:9090`
 - **Database**: finance
 - **Port**: 5432
 
+See [Database Schema](docs/database-schema.md) for detailed ER diagram and table descriptions.
+
 ## Project Structure
 
 - **Controllers**: REST endpoints for contracts and payments
