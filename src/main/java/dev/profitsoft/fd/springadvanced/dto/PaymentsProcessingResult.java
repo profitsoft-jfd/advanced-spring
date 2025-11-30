@@ -1,22 +1,26 @@
 package dev.profitsoft.fd.springadvanced.dto;
 
 import dev.profitsoft.fd.springadvanced.dict.PaymentStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 /**
  * Result of payment processing operation.
  */
 @Getter
+@Schema(description = "Result of payment processing operation")
 public class PaymentsProcessingResult {
 
   /**
    * Number of assigned payments.
    */
+  @Schema(description = "Number of payments successfully assigned to contracts", example = "15")
   private int assigned;
 
   /**
    * Number of not assigned payments.
    */
+  @Schema(description = "Number of payments that could not be assigned to contracts", example = "3")
   private int notAssigned;
 
   /**
