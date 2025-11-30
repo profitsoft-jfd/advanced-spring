@@ -5,6 +5,7 @@ import dev.profitsoft.fd.springadvanced.dto.ContractDetailsDto;
 import dev.profitsoft.fd.springadvanced.dto.ContractSaveDto;
 import dev.profitsoft.fd.springadvanced.monitor.Monitored;
 import dev.profitsoft.fd.springadvanced.repository.ContractRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -82,6 +83,7 @@ public class ContractService {
    * @param contractSaveDto contract data
    * @return created contract ID
    */
+  @Transactional
   @CacheEvict(value = CACHE_CONTRACT, allEntries = true)
   public String create(ContractSaveDto contractSaveDto) {
     ContractData data = convertToData(contractSaveDto);
@@ -96,6 +98,7 @@ public class ContractService {
    * @param contractSaveDto updated contract data
    * @throws IllegalArgumentException if contract not found
    */
+  @Transactional
   @CacheEvict(value = CACHE_CONTRACT, allEntries = true)
   public void update(String id, ContractSaveDto contractSaveDto) {
     ContractData data = contractRepository.findById(id)

@@ -2,8 +2,10 @@ package dev.profitsoft.fd.springadvanced.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.profitsoft.fd.springadvanced.dto.ContractSaveDto;
+import dev.profitsoft.fd.springadvanced.repository.ContractRepository;
+import dev.profitsoft.fd.springadvanced.repository.PaymentRepository;
 import dev.profitsoft.fd.springadvanced.service.ContractService;
-import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@Transactional
 class ContractControllerTest {
 
   @Autowired
@@ -39,6 +40,19 @@ class ContractControllerTest {
 
   @Autowired
   private ContractService contractService;
+
+  @Autowired
+  private PaymentRepository paymentRepository;
+
+  @Autowired
+  private ContractRepository contractRepository;
+
+  @AfterEach
+  void tearDown() {
+    // Delete payments first due to foreign key constraint
+    paymentRepository.deleteAll();
+    contractRepository.deleteAll();
+  }
 
   @Test
   void createContract_shouldReturnCreatedId() throws Exception {

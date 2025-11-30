@@ -1,26 +1,30 @@
+### Create a new contract
+POST http://localhost:9090/api/contracts
+Content-Type: application/json
+
+{
+  "number": "CONTRACT-2025-002",
+  "signDate": "2025-11-30"
+}
+
+### Get contract by ID
+GET http://localhost:9090/api/contracts/9eb935ef-5ec9-4510-aee2-d348771afff3
+
+
+### Create a new payment
+POST http://localhost:9090/api/payments
+Content-Type: application/json
+
+{
+  "sum": 1000.00,
+  "operationTime": "2025-11-30T10:15:30Z",
+  "payer": "Jane Doe",
+  "description": "Payment for contract CONTRACT-2025-002"
+}
+
 ### Generate test payments and contracts
 POST http://localhost:9090/api/payments/generate?count=10
 
 ### Process payments
 POST http://localhost:9090/api/payments/process
 
-### Get contract by ID
-GET http://localhost:9090/api/contracts/9eb935ef-5ec9-4510-aee2-d348771afff3
-
-### Create a new contract
-POST http://localhost:9090/api/contracts
-Content-Type: application/json
-
-{
-  "number": "CONTRACT-2025-001",
-  "signDate": "2025-11-30"
-}
-
-### Update an existing contract
-PUT http://localhost:9090/api/contracts/53aef144-bfa1-4128-9e1d-0a2649a0224f
-Content-Type: application/json
-
-{
-  "number": "CONTRACT-2025-001",
-  "signDate": "2025-12-01"
-}

@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
 import java.util.List;
@@ -36,6 +37,8 @@ public class PaymentService {
   private final ContractService contractService;
 
   private final PaymentRepository paymentRepository;
+
+  private final TransactionTemplate transactionTemplate;
 
   /**
    * Creates a new payment.
@@ -70,18 +73,21 @@ public class PaymentService {
 
   /**
    * Processes a batch of payments by IDs.
+   * Uses TransactionTemplate to ensure atomicity of the batch operation.
    *
    * @param paymentIds list of payment IDs
    * @return processing result
    */
   private PaymentsProcessingResult processPaymentsByIds(List<String> paymentIds) {
-    PaymentsProcessingResult result = new PaymentsProcessingResult();
-    List<PaymentData> payments = paymentRepository.findAllById(paymentIds);
-    for (PaymentData payment : payments) {
-      result.append(processPayment(payment));
-    }
-    paymentRepository.saveAll(payments);
-    return result;
+    return transactionTemplate.execute(status -> {
+      PaymentsProcessingResult result = new PaymentsProcessingResult();
+      List<PaymentData> payments = paymentRepository.findAllById(paymentIds);
+      for (PaymentData payment : payments) {
+        result.append(processPayment(payment));
+      }
+      paymentRepository.saveAll(payments);
+      return result;
+    });
   }
 
   /**
