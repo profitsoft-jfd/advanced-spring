@@ -1,6 +1,6 @@
 package dev.profitsoft.fd.springadvanced.dto;
 
-import dev.profitsoft.fd.springadvanced.data.PaymentStatus;
+import dev.profitsoft.fd.springadvanced.dict.PaymentStatus;
 import lombok.Getter;
 
 @Getter

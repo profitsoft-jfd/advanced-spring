@@ -2,13 +2,14 @@ package dev.profitsoft.fd.springadvanced.service;
 
 import dev.profitsoft.fd.springadvanced.data.ContractData;
 import dev.profitsoft.fd.springadvanced.data.PaymentData;
-import dev.profitsoft.fd.springadvanced.data.PaymentStatus;
+import dev.profitsoft.fd.springadvanced.dict.PaymentStatus;
 import dev.profitsoft.fd.springadvanced.dto.PaymentDto;
 import dev.profitsoft.fd.springadvanced.dto.PaymentSaveDto;
 import dev.profitsoft.fd.springadvanced.dto.PaymentsProcessingResult;
 import dev.profitsoft.fd.springadvanced.monitor.Monitored;
 import dev.profitsoft.fd.springadvanced.repository.PaymentRepository;
 import dev.profitsoft.fd.springadvanced.utils.ListUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class PaymentService {
 
   private final PaymentRepository paymentRepository;
 
+  @Transactional
   public String create(PaymentSaveDto paymentSaveDto) {
     PaymentData data = convertToData(paymentSaveDto);
     PaymentData saved = paymentRepository.save(data);
@@ -45,7 +47,8 @@ public class PaymentService {
     List<String> allPaymentIds = paymentRepository.findIdsByStatus(PaymentStatus.NEW);
     log.info("Found {} new payments to be processed", allPaymentIds.size());
     PaymentsProcessingResult result = new PaymentsProcessingResult();
-    for (List<String> paymentIds : ListUtil.splitList(allPaymentIds, PAYMENT_BATCH_SIZE)) {
+    List<List<String>> batches = ListUtil.splitList(allPaymentIds, PAYMENT_BATCH_SIZE);
+    for (List<String> paymentIds : batches) {
       result.append(processPaymentsByIds(paymentIds));
       log.info("Processed {} payments from {}", result.getTotallyProcessed(), allPaymentIds.size());
     }

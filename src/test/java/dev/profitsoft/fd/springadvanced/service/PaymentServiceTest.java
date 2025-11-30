@@ -1,7 +1,7 @@
 package dev.profitsoft.fd.springadvanced.service;
 
 import dev.profitsoft.fd.springadvanced.data.PaymentData;
-import dev.profitsoft.fd.springadvanced.data.PaymentStatus;
+import dev.profitsoft.fd.springadvanced.dict.PaymentStatus;
 import dev.profitsoft.fd.springadvanced.dto.ContractSaveDto;
 import dev.profitsoft.fd.springadvanced.dto.PaymentSaveDto;
 import jakarta.persistence.EntityManager;

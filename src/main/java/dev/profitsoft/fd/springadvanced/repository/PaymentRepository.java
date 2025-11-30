@@ -1,7 +1,7 @@
 package dev.profitsoft.fd.springadvanced.repository;
 
 import dev.profitsoft.fd.springadvanced.data.PaymentData;
-import dev.profitsoft.fd.springadvanced.data.PaymentStatus;
+import dev.profitsoft.fd.springadvanced.dict.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

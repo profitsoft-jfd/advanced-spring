@@ -1,4 +1,4 @@
-package dev.profitsoft.fd.springadvanced.data;
+package dev.profitsoft.fd.springadvanced.dict;
 
 public enum PaymentStatus {
 

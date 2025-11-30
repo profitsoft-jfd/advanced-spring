@@ -1,5 +1,6 @@
 package dev.profitsoft.fd.springadvanced.data;
 
+import dev.profitsoft.fd.springadvanced.dict.PaymentStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
